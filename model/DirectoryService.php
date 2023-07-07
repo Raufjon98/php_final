@@ -1,57 +1,46 @@
-<?php 
-class DirectoryService 
+<?php
+class DirectoryService
 {
     public static function addDirectory($data)
     {
-        $directory = DirectoryRepository::loadById($data['parent_id']);
-        $dirName = 'files/' . $directory['dirName'] . '/' . $data['name'];
-        if (file_exists($dirName)) {
-            echo "The directory $dirName exists.";
+        $directory = self::directoryDeserialize($data);
+        $parentDrectory = DirectoryRepository::loadById($data['parent_id']);
+        //ask: how to write directoryToAdd when parentDirectory absent 
+        $directoryToAdd = 'files/' . $parentDrectory->dirName . '/' . $directory->directoryName;
+        if (file_exists($directoryToAdd)) {
+            echo "The directory $directoryToAdd exists.";
             die;
         } else {
-            //should write save directory to DB!!! i Think
-            mkdir($dirName);
-            echo "The directory $dirName was successfully created.";
+            mkdir($directoryToAdd);
+            DirectoryRepository::save($directory);
+            echo "The directory $directoryToAdd was successfully created.";
             exit;
         }
     }
 
     public static function renameDirectory($data)
     {
-        $conn = getConnection();
-        if (!is_dir($data['name'])) {
-            try {
-                $sql = " UPDATE directory SET dirName ='{$data['name']}' where id= {$data['id']}";
-                //ask how to update only dirname
-                $conn->prepare($sql)->execute();
-            } catch (PDOException $e) {
-                exit($e->getMessage());
-            }
-        } else  echo "The directory" . $data['name'] . "exists.";
+        $directory = self::directoryDeserialize($data);
+        if (!is_dir($directory->directoryName)) {
+            DirectoryRepository::update($directory);
+        } else  echo "The directory" . $directory->directoryName . "exists.";
     }
 
     public static function loadById($id)
     {
-       $directory = DirectoryRepository::loadById($id);
-       return self::directoryDeserialize($directory); 
+        $directory = DirectoryRepository::loadById($id);
+        return self::mapToDirectoryViewModel($directory);
     }
 
     public static function delete($id)
     {
-        $conn = getConnection();
-        $dir = DirectoryRepository::loadById($id);
-        $directory = self::directoryDeserialize($dir);
-        
-        echo  $dirPath  = 'files/' . $directory->directoryName;
+        $directory = DirectoryRepository::loadById($id);
+        $parentDerictory = DirectoryRepository::loadById($directory->parent_id);
+        $dirPath  = 'files/' .$parentDerictory->dirName .'/'. $directory->dirName;
+        //ask how to remove, when parentDirectory is files
         self::remove($dirPath);
-        try {
-            $sql = " UPDATE directory SET status = 0  where id= $id";
-            //ask how to update only status
-            $conn->prepare($sql)->execute();
-        } catch (PDOException $e) {
-            exit($e->getMessage());
-        }
-        echo 'Directory removed successfully!';
+        DirectoryRepository::updateStatus(0, $id);
+        echo ' Directory removed successfully!';
     }
 
     public static function remove($dirPath)
@@ -76,18 +65,18 @@ class DirectoryService
     private static function directoryDeserialize($data)
     {
         $directory = new Directory();
+        $directory->id = $data['id'];
         $directory->directoryName = $data['directoryName'];
         $directory->parent_id = $data['parent_id'];
         $directory->status = 1;
         return $directory;
     }
-    
+
     private static function mapToDirectoryViewModel(Directory $directory)
     {
         $directoryViewModel = new DirectoryViewModel();
         $directoryViewModel->directoryName = $directory->directoryName;
-        $directoryViewModel->parent_id = $directory->parent_id; 
+        $directoryViewModel->parent_id = $directory->parent_id;
         return $directoryViewModel;
     }
-
 }

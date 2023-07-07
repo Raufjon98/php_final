@@ -66,7 +66,7 @@ class FileRepository
             'directoryId' => $file->directoryId,
             'realfileName' => $file->realFileName,
             'fileName' => $file->fileName,
-            'extention' => $file->extention,
+            'extention' => $file->extension,
             'status' => $file->status
         ];
         return $data;

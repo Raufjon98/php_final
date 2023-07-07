@@ -10,7 +10,6 @@ $url = $_SERVER['REQUEST_URI'];
 $url = rtrim($url, '/'); 
 $method = $_SERVER['REQUEST_METHOD'];
 $parts = explode('/', $url);
-var_dump($method);
 switch ($parts[1]) {
     case 'user':
         $id  = $parts[2] ?? null;
@@ -134,7 +133,7 @@ if ($parts[1] === 'user') {
         if (empty($id)) {
         switch ($method) {
             case 'GET':
-                FileService::load();
+                var_dump(FileService::load());
                 break;
             case 'POST':
                 if (isset($_POST['uploadBtn']) && $_POST['uploadBtn'] == 'upload') {
@@ -153,7 +152,7 @@ if ($parts[1] === 'user') {
     } elseif (is_numeric($id)) {
         switch ($method) {
             case 'GET':
-                FileService::loadById($id);
+               var_dump(FileService::loadById($id));
                 break;
             case 'DELETE':
                FileService::delete($id);
@@ -183,12 +182,15 @@ if ($parts[1] === 'user') {
     }
 } elseif ($parts[1] === 'directory') {
     if (is_null($id)) {
-        if (isset($_POST['add']) && $_POST['add'] == 'directory') {
-           DirectoryService::addDirectory($_POST);
-        } elseif (isset($_POST['update']) && $_POST['update'] == 'rename') {
-            DirectoryService::renameDirectory($_POST);
-        } else echo 'Your method is incorrect for this app!';
-        http_response_code(404);
+        if($method ==='POST'){
+            if (isset($_POST['add']) && $_POST['add'] == 'directory') {
+                DirectoryService::addDirectory($_POST);
+             } elseif (isset($_POST['update']) && $_POST['update'] == 'rename') {
+                echo 'update';
+                 DirectoryService::renameDirectory($_POST);
+             } else echo 'Your method is incorrect for this app!';
+             http_response_code(404);
+        }
     } elseif (is_numeric($id)) {
         switch ($method) {
             case 'GET':

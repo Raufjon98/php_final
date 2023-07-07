@@ -1,7 +1,7 @@
 <?php
 
 require_once 'Entities/File.php';
-require_once 'Entities/Directory.php';
+require_once 'src/connection.php';
 
 class FileService
 {
@@ -104,7 +104,7 @@ class FileService
         $file->directoryId = $data['directoryID'];
         $file->realFileName = $data['realFileName'];
         $file->fileName = $data['fileName'];
-        $file->extention = $data['extension'];
+        $file->extension = $data['extension'];
         $file->status = 1;
         return $file;
     }
@@ -112,8 +112,8 @@ class FileService
     public static function mapToFileViewModel(File $file)
     {
         $fileViewModel = new FileViewModel();
-        $fileViewModel->fileName = $file->fileName;
-        $fileViewModel->extension = $file->extention;
+        $fileViewModel->fileName = $file->realFileName;
+        $fileViewModel->extension = $file->extension;
         return $fileViewModel;
     }
 }
