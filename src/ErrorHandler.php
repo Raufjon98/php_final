@@ -1,4 +1,5 @@
 <?
+
 class ErrorHandler
 {
     public static function handlerException(Throwable $exception): void
