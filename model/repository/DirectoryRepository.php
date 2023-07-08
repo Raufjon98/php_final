@@ -1,6 +1,7 @@
 <?php
 
-require_once 'src/connection.php';
+require_once '../entity/Directory.php';
+require_once '../../src/connection.php';
 class DirectoryRepository
 {
     public static function loadById($id)
@@ -28,7 +29,6 @@ class DirectoryRepository
     {
         $conn = getConnection();
         $oldDirectory = self::loadById($directory->id);
-        var_dump($oldDirectory);
         $data = self::directorySerialize($directory);
         $data['id'] = $directory->id;
         if(is_null($directory->directoryName)){
@@ -37,8 +37,6 @@ class DirectoryRepository
         if(is_null($directory->parent_id)){
             $data['parent_id'] = intval($oldDirectory->parent_id);
         }
-     
-        var_dump($data);
         try {
             $sql = "UPDATE directory SET dirName =:directoryName, parent_id=:parent_id, status=:status where id=:id";
             $conn->prepare($sql)->execute($data);
@@ -70,7 +68,6 @@ class DirectoryRepository
     {   
        
         $data = [
-            // 'id'=>$directory->id, ask I need to id for update 
             'directoryName' => $directory->directoryName,
             'parent_id' => intval($directory->parent_id),
             'status' => 1

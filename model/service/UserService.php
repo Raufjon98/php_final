@@ -1,22 +1,21 @@
-<?php 
+<?php
 
 
-require_once 'src/Connection.php';
-require_once 'PHPMailer/src/PHPMailer.php';
-require_once 'PHPMailer/src/SMTP.php';
+require_once '../../src/connection.php';
+require_once '../../PHPMailer/src/PHPMailer.php';
+require_once '../../PHPMailer/src/SMTP.php';
 require_once 'PHPMailer/src/Exception.php';
-require_once 'Entities/User.php';
+require_once '../entity/User.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 
- class UserService 
- {
+class UserService
+{
     public static function login($email, $password)
     {
-        $conn = getConnection();
         $checkingpassword = md5($password);
         try {
             $user = UserRepository::loadByEmailAndPassword($email, $password);
@@ -40,28 +39,29 @@ use PHPMailer\PHPMailer\Exception;
 
     public static function resetPassword($email)
     {
-        $conn = getConnection();
-        $newPassword = uniqid(date('Y-m-d') + rand(1, 100) + $email);
-        $md5Password = md5($newPassword);
-        $smtpUserName = 'your@gmail.com';
-        $smtpPassword = 'yourPassword';
+        $newPassword = md5(uniqid(date('Y-m-d') + rand(1, 100) + $email));
+        self::sendEmail($email, $newPassword);
+        UserRepository::resetPassword($email, $newPassword);
+    }
+
+    public static function sendEmail($email, $newPassword)
+    {
         $mail = new PHPMailer(true);
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = $smtpUserName;
-        $mail->Password = $smtpPassword;
+        $mail->Username = 'raufjonaliboev77@gmail.com';
+        $mail->Password = 'vzkkiirottvhsnxz';
         $mail->SMTPSecure = 'tls';
         $mail->Port = '587';
-        $mail->setFrom('seneder@gmail.com', 'developer team');
-        $mail->addAddress($email, 'PHP developer!');
+        $mail->setFrom('raufjonaliboev77@gmail.com', 'Developer Team');
+        $mail->addAddress($email, 'Dear User');
         $mail->Subject = 'Reset password!';
-        $mail->Body = '<p>Dear user, Your password was reseted!</p>
-        <a href = "http://final/resetPassword?action=reset&email=' . $email . '$key=' . $md5Password . '" target="_blank">Click here to add new password!</a>';
+        $email->Body = '<p>Dear user, Your password was reseted!</p>
+        <a href = "http://final/resetPassword?action=reset&email=' . $email . '$key=' . $newPassword . '" target="_blank">Click here to add new password!</a>';
         try {
             $mail->send();
             echo 'Email sent successfully!';
-            UserRepository::resetPassword($mail, $md5Password);
         } catch (Exception $e) {
             echo 'Email could not be sent. Error: ', $mail->ErrorInfo;
         }
@@ -72,28 +72,39 @@ use PHPMailer\PHPMailer\Exception;
         return self::mapToUSerViewModel($user);
     }
     public static function load()
-    {   
+    {
         $users =  UserRepository::load();
-        $result =[];
-        foreach ($users as $user){
-          array_push($result, self::mapToUSerViewModel($user));
+        $result = [];
+        foreach ($users as $user) {
+            array_push($result, self::mapToUSerViewModel($user));
         }
-       return $result;
+        return $result;
     }
-   
+
     public static function loadById(int $id)
     {
-       
+
         $user = UserRepository::loadById($id);
         return self::mapToUSerViewModel($user);
     }
+
+    public static function LoadByIdArray($array)
+    {
+        var_dump($array);
+        $users = UserRepository::LoadByIdArray($array);
+        $result = [];
+        foreach ($users as $user)
+        {
+            array_push($result, self::mapToUSerViewModel($user));
+        }
+    }
     public static function save($data)
-    { 
-       $user = self::userDeserialize($data);
+    {
+        $user = self::userDeserialize($data);
         return UserRepository::save($user);
     }
     public static function update($data, $id)
-    {   
+    {
         $user = self::userDeserialize($data);
         return UserRepository::update($user, $id);
     }
@@ -114,7 +125,7 @@ use PHPMailer\PHPMailer\Exception;
         $user->fullName = $data['fullName'];
         $user->gender = $data['gender'];
         $user->password = $data['password'];
-        $user->status= 1;
+        $user->status = 1;
         return $user;
     }
     private static function mapToUSerViewModel(User $user)

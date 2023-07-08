@@ -1,7 +1,7 @@
 <?php
 
-require_once 'Entities/File.php';
-require_once 'src/Connection.php';
+require_once '../entity/File.php';
+require_once '../../src/connection.php';
 
 class FileRepository
 {

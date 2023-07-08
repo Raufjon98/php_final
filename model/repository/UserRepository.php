@@ -1,7 +1,7 @@
 <?php
 
-require_once 'Entities/User.php';
-require_once 'src/Connection.php';
+require_once '../entity/User.php';
+require_once '../../src/connection.php';
 
 class UserRepository
 {
@@ -27,8 +27,10 @@ class UserRepository
         }
     }
 
-    public static function LoadByIdArray($array)
+    public static function LoadByIdArray(User $user)
     {
+        $array = (array) $user;
+        // var_dump($array);
         $conn = getConnection();
         try{
             $users = $conn->query("SELECT fullName  FROM `User` WHERE id IN($array)")->fetchAll(PDO::FETCH_CLASS, 'User');

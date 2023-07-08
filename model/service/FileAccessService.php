@@ -1,16 +1,17 @@
 <?php 
+
+require_once '../entity/FileAccess.php';
 class FileAccessService
 {
     public static function loadAccess($idFile)
     {
-        //ask
-        $conn = getConnection();
-        try {
-            $accessArr = $conn->query("SELECT fullName  FROM `User` WHERE id IN(SELECT id_user FROM `fileAccess` WHERE id_file =$idFile)")->fetchAll();
-            var_dump($accessArr);
-        } catch (PDOException $e) {
-            exit($e->getMessage());
-        }
+        $filesAccess = self::loadByIdFile($idFile); //returns object
+        return UserService::LoadByIdArray($filesAccess); //array of objeccts
+    }
+    public static function loadByIdFile($idFile)
+    {
+        //ask returns error not found class 
+       return FileAccessRepository::loadByIdFile($idFile);
     }
     public static function save($data)
     {
@@ -20,7 +21,7 @@ class FileAccessService
     public static function delete($data)
     {
        $fileAccess = self::accessDeserialize($data);
-       return fileAccessRepository::delete($fileAccess);
+       return FileAccessRepository::delete($fileAccess);
     }
     private static function accessDeserialize($data)
     {

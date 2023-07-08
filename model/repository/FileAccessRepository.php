@@ -1,6 +1,7 @@
 <?php
-
-class fileAccessRepository
+require_once '../../src/connection.php';
+require_once '../entity/FileAccess.php';
+class FileAccessRepository
 {
     public static function loadByIdFile($idFile)
     {
