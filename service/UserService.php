@@ -1,11 +1,9 @@
 <?php
 
 
-require_once '../../src/connection.php';
-require_once '../../PHPMailer/src/PHPMailer.php';
-require_once '../../PHPMailer/src/SMTP.php';
+require_once 'PHPMailer/src/PHPMailer.php';
+require_once 'PHPMailer/src/SMTP.php';
 require_once 'PHPMailer/src/Exception.php';
-require_once '../entity/User.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -90,13 +88,19 @@ class UserService
 
     public static function LoadByIdArray($array)
     {
-        var_dump($array);
-        $users = UserRepository::LoadByIdArray($array);
+        $idUsers='';
+        foreach ($array as $object) {
+            $idUsers .= ((int)$object->id_user).',';
+        }
+        $idUsers = substr($idUsers, 0, -1);
+        var_dump($idUsers);
+        $users = UserRepository::LoadByIdArray($idUsers);
         $result = [];
         foreach ($users as $user)
         {
-            array_push($result, self::mapToUSerViewModel($user));
+            array_push($result, self::mapToUSerViewModel($user)->fullName);
         }
+        return $result;
     }
     public static function save($data)
     {

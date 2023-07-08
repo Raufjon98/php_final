@@ -1,16 +1,15 @@
 <?php 
 
-require_once '../entity/FileAccess.php';
+// require_once '../entity/FileAccess.php';
 class FileAccessService
 {
     public static function loadAccess($idFile)
     {
-        $filesAccess = self::loadByIdFile($idFile); //returns object
-        return UserService::LoadByIdArray($filesAccess); //array of objeccts
+        $filesAccess = self::loadByIdFile($idFile); 
+        return UserService::LoadByIdArray($filesAccess); 
     }
     public static function loadByIdFile($idFile)
     {
-        //ask returns error not found class 
        return FileAccessRepository::loadByIdFile($idFile);
     }
     public static function save($data)
@@ -25,7 +24,7 @@ class FileAccessService
     }
     private static function accessDeserialize($data)
     {
-        $fileAccess = new fileAccess();
+        $fileAccess = new FileAccess();
         $fileAccess->id_file = $data['id_file'];
         $fileAccess->id_user = $data['id_user'];
         return $fileAccess;

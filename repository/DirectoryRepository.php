@@ -1,12 +1,11 @@
 <?php
 
-require_once '../entity/Directory.php';
-require_once '../../src/connection.php';
-class DirectoryRepository
+
+class DirectoryRepository extends   BaseRepository
 {
     public static function loadById($id)
     {
-        $conn = getConnection();
+        $conn = self::getConnection();
         try {
             $directory = $conn->query("Select * from directory where id=$id")->fetchObject('Directory');
             return $directory;
@@ -16,7 +15,7 @@ class DirectoryRepository
     }
     public static function save(Directory $directory)
     {
-        $conn = getConnection();
+        $conn = self::getConnection();
         $data = self::directorySerialize($directory);
         try {
             $sql = "INSERT INTO directory (dirName, parent_id, status) values(:directoryName, :parent_id, :status)";
@@ -27,14 +26,14 @@ class DirectoryRepository
     }
     public static function update(Directory $directory)
     {
-        $conn = getConnection();
+        $conn = self::getConnection();
         $oldDirectory = self::loadById($directory->id);
         $data = self::directorySerialize($directory);
         $data['id'] = $directory->id;
-        if(is_null($directory->directoryName)){
+        if (is_null($directory->directoryName)) {
             $data['directoryName'] = $oldDirectory->dirName;
         }
-        if(is_null($directory->parent_id)){
+        if (is_null($directory->parent_id)) {
             $data['parent_id'] = intval($oldDirectory->parent_id);
         }
         try {
@@ -46,7 +45,7 @@ class DirectoryRepository
     }
     public static function updateStatus(int $status, $id)
     {
-        $conn = getConnection();
+        $conn = self::getConnection();
         try {
             $sql = " UPDATE directory SET status = $status  where id= $id";
             $conn->prepare($sql)->execute();
@@ -56,7 +55,7 @@ class DirectoryRepository
     }
     public static function delete($id)
     {
-        $conn = getConnection();
+        $conn = self::getConnection();
         try {
             $sql = " UPDATE directory SET status = 0  where id= $id";
             $conn->prepare($sql)->execute();
@@ -65,8 +64,8 @@ class DirectoryRepository
         }
     }
     public static function directorySerialize(Directory $directory)
-    {   
-       
+    {
+
         $data = [
             'directoryName' => $directory->directoryName,
             'parent_id' => intval($directory->parent_id),

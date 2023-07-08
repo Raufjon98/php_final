@@ -23,14 +23,14 @@ class FileService
                 $filePath = $uploadPath . '/' . $newFileName;
 
                 if (move_uploaded_file($tmpPath, $filePath)) {
-                    try {
-                        //ask how to use method
-                        $sql = "INSERT INTO files (id, id_dir, realFileName, fileName, extension) values(default, $idDir, '$fileName', '$newFileName', '$fileExtension' )";
-                        $conn->prepare($sql)->execute();
-                        echo 'File successfully uploaded!';
-                    } catch (PDOException $e) {
-                        exit($e->getMessage());
-                    }
+                    $data = [
+                        'directoryId' => $idDir,
+                        'realfileName' => $fileName,
+                        'fileName' => $fileName,
+                        'extention' => $fileExtension,
+                        'status' => 1
+                    ];
+                    FileService::save($data);
                 } else {
                     echo 'Moving error!';
                 }
@@ -54,17 +54,13 @@ class FileService
         if (rename('files/' . $oldDir->directoryName . '/' . $file['fileName'], 'files/' . $newDir->directoryName . '/' . $file->fileName)) {
             echo 'File moved!';
         } else echo $oldDir->directoryName . '/' . $file->fileName, $newDir->directoryName . '/' . $file->fileName;
-        try {
-            //ask how to use method to update not full properties
-            $sql = " UPDATE files SET realFileName ='$fileName', id_dir = $idDir  where id=$idFile";
-            $conn->prepare($sql)->execute();
-        } catch (PDOException $e) {
-            exit($e->getMessage());
-        }
+       self::updateMoveFile($fileName, $idDir, $idFile);
     }
 
-
-
+    public static function updateMoveFile($fileName, $directoryId, $id)
+    {
+       return FileRepository::updateMoveFile($fileName, $directoryId,$id);
+    }
     public static function load()
     {
         $files = FileRepository::load();

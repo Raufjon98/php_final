@@ -1,13 +1,13 @@
 <?php
 
-require_once '../entity/User.php';
-require_once '../../src/connection.php';
+// require_once '../entity/User.php';
+// require_once '../../src/connection.php';
 
-class UserRepository
+class UserRepository extends BaseRepository
 {
     public static function load()
     {
-        $conn = getConnection();
+        $conn = self::getConnection();
         try {
             $users = $conn->query("SELECT * FROM User where status = 2")->fetchAll(PDO::FETCH_CLASS, 'User');
             return $users;
@@ -18,7 +18,7 @@ class UserRepository
 
     public static function loadById(int $id)
     {
-        $conn = getConnection();
+        $conn = self::getConnection();
         try {
             $user = $conn->query("SELECT * FROM User where id=$id")->fetchObject('User');
             return $user;
@@ -27,13 +27,12 @@ class UserRepository
         }
     }
 
-    public static function LoadByIdArray(User $user)
+    public static function LoadByIdArray($arrayOfId)
     {
-        $array = (array) $user;
-        // var_dump($array);
-        $conn = getConnection();
+        
+        $conn = self::getConnection();
         try{
-            $users = $conn->query("SELECT fullName  FROM `User` WHERE id IN($array)")->fetchAll(PDO::FETCH_CLASS, 'User');
+            echo $users = $conn->query("SELECT * FROM `User` WHERE id IN($arrayOfId)")->fetchAll(PDO::FETCH_CLASS, 'User');
             return $users;
         }catch(Exception $e){
             exit($e->getMessage());
@@ -42,7 +41,7 @@ class UserRepository
     }
     public static function save(User $user)
     {
-        $conn = getConnection();
+        $conn = self::getConnection();
         $data = self::userSerialize($user);
         try {
             $sql = "INSERT INTO User ( email, password, fullName, age, gender, status) values(:email, :password, :fullName, :age, :gender, :status)";
@@ -54,7 +53,7 @@ class UserRepository
 
     public static function update(User $user, $id)
     {
-        $conn = getConnection();
+        $conn = self::getConnection();
         $data = self::userSerialize($user);
         try {
             $sql = "UPDATE User SET email=:email, password=:password, fullName=:fullName, age=:age, gender=:gender, status=:status WHERE id=$id";
@@ -66,7 +65,7 @@ class UserRepository
 
     public static function delete($id)
     {
-        $conn = getConnection();
+        $conn = self::getConnection();
         try {
             $sql = " UPDATE User SET status = 3 where id=:id";
             $conn->prepare($sql)->execute(['id' => $id]);
@@ -77,7 +76,7 @@ class UserRepository
 
     public static function loadByEmailAndPassword($email, $password)
     {
-        $conn = getConnection();
+        $conn = self::getConnection();
         $checkingpassword = md5($password);
         try {
             $user = $conn->query("SELECT * FROM User where email='$email' and password = '$checkingpassword' limit 1")->fetch(PDO::FETCH_CLASS, 'User');
@@ -89,7 +88,7 @@ class UserRepository
 
     public static function resetPassword($email, $password)
     {
-        $conn = getConnection();
+        $conn = self::getConnection();
         try {
             $sql = " UPDATE User SET password ='$password', status = 4  where email=:email";
             $conn->prepare($sql)->execute(['email' => $email]);
@@ -107,7 +106,7 @@ class UserRepository
 
     public static function updatePassword($email, $password1, $password2)
     {
-        $conn = getConnection();
+        $conn = self::getConnection();
         if ($password1 != $password2) {
             echo 'Password don`t match. Passwords are should be same!';
         } else {
@@ -128,7 +127,7 @@ class UserRepository
 
     public static function search($email)
     {
-        $conn = getConnection();
+        $conn = self::getConnection();
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             echo  "Invalid email format";
         } else {

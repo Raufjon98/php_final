@@ -136,17 +136,13 @@ if ($parts[1] === 'user') {
                 var_dump(FileService::load());
                 break;
             case 'POST':
-                if (isset($_POST['uploadBtn']) && $_POST['uploadBtn'] == 'upload') {
-                    if ($_POST['action'] === 'add') {
-                  //ask how to check parameters      
+              
+                    if(ValidationService::checkFileValid($_POST))
+                    {
                         FileService::addFile($_FILES, $_POST['id_dir']);
-                    }else {echo 'Enter parameter action=add';}
-                    if ($_POST['action'] === 'move') {
-                       FileService::moveFile($_POST['newName'], $_POST['id_dir'], $_POST['id_file']);
-                    }else {echo 'Enter parameter action=move';}
-                }else {
-                    echo 'Enter parameter uploadBtn=upload ';
-                }
+                    }elseif(ValidationService::renameFileValid($_POST)){
+                        FileService::moveFile($_POST['newName'], $_POST['id_dir'], $_POST['id_file']);
+                    }
                 break;
             default:
                 http_response_code(404);
@@ -168,14 +164,13 @@ if ($parts[1] === 'user') {
         if($method === 'GET'){
             if ($fileId != '') {
                 if ($userId == '') {
-                    FileAccessService::loadAccess($fileId);
+                   var_dump( FileAccessService::loadAccess($fileId));
                 } else {
+                    $data = ['id_user'=>$userId, 'id_file'=>$fileId];
                     if ($method === 'DELETE') {
-                        FileAccessService::delete($fileId, $userId);
-                        //ask
+                        FileAccessService::delete($data);
                     } elseif ($method === 'PUT') {
-                        FileAccessService::save($fileId, $userId);
-                        //ask
+                        FileAccessService::save($data);
                     } else  echo 'Your method is incorrect for this app!';
                     http_response_code(404);
                 }

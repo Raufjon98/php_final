@@ -5,9 +5,14 @@ class DirectoryService
     public static function addDirectory($data)
     {
         $directory = self::directoryDeserialize($data);
-        $parentDrectory = DirectoryRepository::loadById($data['parent_id']);
-        //ask: how to write directoryToAdd when parentDirectory absent 
-        $directoryToAdd = 'files/' . $parentDrectory->dirName . '/' . $directory->directoryName;
+        if ($data['parent_id']) {
+            $parentDrectory = DirectoryRepository::loadById($data['parent_id']);
+            $directoryToAdd = 'files/' . $parentDrectory->dirName . '/' . $directory->directoryName;
+        } else {
+            $directoryToAdd = 'files/' . $directory->directoryName;
+        }
+
+
         if (file_exists($directoryToAdd)) {
             echo "The directory $directoryToAdd exists.";
             die;
@@ -37,11 +42,13 @@ class DirectoryService
     {
         $directory = DirectoryRepository::loadById($id);
         $parentDerictory = DirectoryRepository::loadById($directory->parent_id);
-        $dirPath  = 'files/' .$parentDerictory->dirName .'/'. $directory->dirName;
-        //ask how to remove, when parentDirectory is files
-        self::remove($dirPath);
-        DirectoryRepository::updateStatus(0, $id);
-        echo ' Directory removed successfully!';
+        $dirPath  = 'files/' . $parentDerictory->dirName . '/' . $directory->dirName;
+        if($parentDerictory->dirName!='')
+        {
+            self::remove($dirPath);
+            DirectoryRepository::updateStatus(0, $id);
+            echo ' Directory removed successfully!';
+        }else{echo 'the path is not directory';}
     }
 
     public static function remove($dirPath)
