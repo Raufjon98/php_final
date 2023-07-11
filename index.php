@@ -2,13 +2,22 @@
 
 session_start();
 
-include_once 'autoload.php';
+require_once 'autoload.php';
+require_once 'Router.php';
+
+
+$router = new Router();
+$uri = parse_url($_SERVER['REQUEST_URI'])['path'];
+$method = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
+$router->get($uri, $method, 'MyController'); 
+var_dump($router->route($uri, $method));
+echo 'It`s end point!';
 
 
 
 $url = $_SERVER['REQUEST_URI'];
 $url = rtrim($url, '/'); 
-$method = $_SERVER['REQUEST_METHOD'];
+
 $parts = explode('/', $url);
 switch ($parts[1]) {
     case 'user':
