@@ -49,7 +49,7 @@ class UserService
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'raufjonaliboev77@gmail.com';
-        $mail->Password = 'vzkkiirottvhsnxz';
+        $mail->Password = '';
         $mail->SMTPSecure = 'tls';
         $mail->Port = '587';
         $mail->setFrom('raufjonaliboev77@gmail.com', 'Developer Team');
