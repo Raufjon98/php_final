@@ -1,5 +1,5 @@
 <?php
-require_once '../entity/Directory.php';
+
 class DirectoryService
 {
     public static function addDirectory($data)

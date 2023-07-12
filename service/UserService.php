@@ -124,7 +124,7 @@ class UserService
     private static function userDeserialize($data)
     {
         $user  = new User();
-        $user->age = $data['age'];
+        $user->age = intval($data['age']);
         $user->email = $data['email'];
         $user->fullName = $data['fullName'];
         $user->gender = $data['gender'];

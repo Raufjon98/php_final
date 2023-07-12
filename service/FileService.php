@@ -1,8 +1,5 @@
 <?php
 
-require_once '../entity/File.php';
-require_once '../../src/connection.php';
-
 class FileService
 {
     public static function addFile($data, $idDir)

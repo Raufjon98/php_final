@@ -1,6 +1,5 @@
 <?php 
 
-// require_once '../entity/FileAccess.php';
 class FileAccessService
 {
     public static function loadAccess($idFile)
