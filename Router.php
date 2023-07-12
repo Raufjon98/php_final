@@ -42,4 +42,9 @@ class Router
         http_response_code($code);
         die();
     }
+    public static function printRoutes()
+    {
+        var_dump(self::$routes);
+        // unset($routes);
+    }
 }

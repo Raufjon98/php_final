@@ -10,10 +10,11 @@ $router = new Router();
 $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
 $method = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
 $parts = explode('/', $uri);
-$router->get($uri, UserService::load());
-$router->get($uri,FileService::load());
+// $router->get($uri, UserService::load());
+// $router->get($uri,FileService::load());
+$router->delete($uri, UserService::delete(7));
 var_dump($router->route($uri, $method));
-echo 'It`s end point!';
+
 
 
 
