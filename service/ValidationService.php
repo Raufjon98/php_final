@@ -9,9 +9,9 @@
         if (!isset($_POST['action']) && $_POST['action'] === 'add') {
             throw new Exception('Enter action with  value add');
         }
-        if (!isset($_POST['id_dir'])){
-            throw new Exception('Enter id_dir value');
-        }
+        // if (!isset($_POST['id_dir'])){
+        //     throw new Exception('Enter id_dir value');
+        // }
         if (!isset($_FILES))
         {
             throw new Exception ('Upload file');

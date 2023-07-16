@@ -4,16 +4,10 @@ session_start();
 
 require_once 'autoload.php';
 require_once 'Router.php';
+require_once 'routes.php';
 
 
-$router = new Router();
-$uri = parse_url($_SERVER['REQUEST_URI'])['path'];
-$method = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
-$parts = explode('/', $uri);
-// $router->get($uri, UserService::load());
-// $router->get($uri,FileService::load());
-$router->delete($uri, UserService::delete(7));
-var_dump($router->route($uri, $method));
+
 
 
 
@@ -224,8 +218,3 @@ var_dump($router->route($uri, $method));
 //     echo 'URL is absent. Please enter true url!';
 //     http_response_code(404);
 // }
-
-
-
-
-

@@ -19,10 +19,11 @@ class Router
     public static function post($uri, $service)
     {
         self::add($uri, 'POST', $service);
+        echo 'User added!';
     }
     public static function put($uri, $service)
     {
-        self::add($uri, 'PUT', $service);
+        self::add($uri, 'POST', $service);
     }
     public static function delete($uri, $service)
     {
