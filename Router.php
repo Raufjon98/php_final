@@ -14,6 +14,7 @@ class Router
 
     public static function get($uri, $service)
     {
+        var_dump($uri);
         self::add($uri, 'GET', $service);
     }
     public static function post($uri, $service)
@@ -48,4 +49,5 @@ class Router
         var_dump(self::$routes);
         // unset($routes);
     }
+
 }
