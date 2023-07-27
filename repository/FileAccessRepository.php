@@ -7,7 +7,7 @@ class FileAccessRepository extends BaseRepository
     {
         $conn = self::getConnection();
         try {
-            $fileAccess = $conn->query(" SELECT id_user FROM `fileAccess` WHERE id_file =$idFile")->fetchAll(PDO::FETCH_CLASS, 'FileAccess');
+            $fileAccess = $conn->query(" SELECT DISTINCT id_user FROM `fileAccess` WHERE id_file =$idFile")->fetchAll(PDO::FETCH_CLASS, 'FileAccess');
             return $fileAccess;
         } catch (Exception $e) {
             exit($e->getMessage());
@@ -20,7 +20,6 @@ class FileAccessRepository extends BaseRepository
         try {
             $sql = "INSERT INTO fileAccess(id_file, id_user) values (:id_file, :id_user)";
             $conn->prepare($sql)->execute($data);
-            echo "Access added!";
         } catch (PDOException $e) {
             exit($e->getMessage());
         }

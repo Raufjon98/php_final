@@ -16,8 +16,12 @@ class FileAccessService
         $fileAccess = self::accessDeserialize($data);
         return FileAccessRepository::save($fileAccess);
     }
-    public static function delete($data)
+    public static function delete($id, $id_user)
     {
+        $data = [
+            'id_file'=>$id,
+            'id_user'=>$id_user 
+        ];
        $fileAccess = self::accessDeserialize($data);
        return FileAccessRepository::delete($fileAccess);
     }

@@ -79,10 +79,10 @@ class FileService
         $file = self::fileDesetialize($data);
         return FileRepository::save($file);
     }
-    public static function update($data, $id)
+    public static function update($data)
     {
         $file = self::fileDesetialize($data);
-        return FileRepository::update($file, $id);
+        return FileRepository::update($file);
     }
 
     public static function delete($id)
@@ -94,10 +94,11 @@ class FileService
     private static function fileDesetialize($data)
     {
         $file = new File();
-        $file->directoryId = $data['directoryID'];
+        $file->directoryId = $data['directoryId'];
         $file->realFileName = $data['realFileName'];
         $file->fileName = $data['fileName'];
         $file->extension = $data['extension'];
+        $file->id = $data['id'];
         $file->status = 1;
         return $file;
     }

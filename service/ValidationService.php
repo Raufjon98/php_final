@@ -1,7 +1,16 @@
 <?php
+
  class ValidationService
  {
-    public static function checkFileValid($_POST)
+    public static function userValid()
+    {
+        if(!isset($_POST['userBTN']) && $_POST['userBTN'] === 'addUSer'){
+           throw new Exception ('Should add UserBTN = addUSer');
+        }
+        return;
+    }
+
+    public static function checkFileValid()
     {
         if (!isset($_POST['uploadBtn']) && $_POST['uploadBtn'] == 'upload') {
           throw new Exception('Enter uploadBtn with value upload!');
@@ -21,7 +30,7 @@
             throw new Exception('Enter directoryId!');
         }
     }
-    public static function renameFileValid($_POST)
+    public static function renameFileValid()
     {
         if (!isset($_POST['uploadBtn']) && $_POST['uploadBtn'] == 'upload') {
             throw new Exception('Enter uploadBtn with value upload!');
@@ -40,6 +49,7 @@
           {
             throw new Exception('Enter id_file!');
           }
-//parent id is not required
     }
+
+ 
  }

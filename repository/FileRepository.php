@@ -37,12 +37,12 @@ class FileRepository extends BaseRepository
             exit($e->getMessage());
         }
     }
-    public static function update(File $file, $id)
+    public static function update(File $file)
     {
         $conn = self::getConnection();
         $data = self::fileSerialize($file);
         try {
-            $sql = " UPDATE files SET id_dir=:directoryId, realFileName=:realFileName, filename=:FileName, extention=:extensio status=:status WHERE id=$id";
+            echo $sql = " UPDATE files SET id_dir=:directoryId, realFileName=:realfileName, fileName=:fileName, extension=:extention, status=:status WHERE id=:id";
             $conn->prepare($sql)->execute($data);
         } catch (PDOException $e) {
             exit($e->getMessage());
@@ -77,7 +77,8 @@ class FileRepository extends BaseRepository
             'realfileName' => $file->realFileName,
             'fileName' => $file->fileName,
             'extention' => $file->extension,
-            'status' => $file->status
+            'status' => $file->status,
+            'id' => $file->id
         ];
         return $data;
     }

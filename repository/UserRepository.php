@@ -51,12 +51,12 @@ class UserRepository extends BaseRepository
         }
     }
 
-    public static function update(User $user, $id)
+    public static function update(User $user)
     {
         $conn = self::getConnection();
         $data = self::userSerialize($user);
         try {
-            $sql = "UPDATE User SET email=:email, password=:password, fullName=:fullName, age=:age, gender=:gender, status=:status WHERE id=$id";
+            $sql = "UPDATE User SET email=:email, password=:password, fullName=:fullName, age=:age, gender=:gender, status=:status WHERE id=:id";
             $conn->prepare($sql)->execute($data);
         } catch (PDOException $e) {
             exit($e->getMessage());
@@ -147,6 +147,7 @@ class UserRepository extends BaseRepository
             'email' => $user->email,
             'gender' => $user->gender,
             'password' => $user->password,
+            'id' =>$user->id,
             'status' => 1
         ];
         return $data;

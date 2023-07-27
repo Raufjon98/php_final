@@ -27,9 +27,9 @@ class DirectoryService
     public static function renameDirectory($data)
     {
         $directory = self::directoryDeserialize($data);
-        if (!is_dir($directory->directoryName)) {
+        // if (!is_dir($directory->directoryName)) {
             DirectoryRepository::update($directory);
-        } else  echo "The directory" . $directory->directoryName . "exists.";
+        // } else  echo "The directory" . $directory->directoryName . "exists.";
     }
 
     public static function loadById($id)

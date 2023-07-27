@@ -79,9 +79,8 @@ class UserService
         return $result;
     }
 
-    public static function loadById(int $id)
+    public static function loadById(int $id = null)
     {
-
         $user = UserRepository::loadById($id);
         return self::mapToUSerViewModel($user);
     }
@@ -107,10 +106,10 @@ class UserService
         $user = self::userDeserialize($data);
         return UserRepository::save($user);
     }
-    public static function update($data, $id)
-    {
+    public static function update($data)
+    { 
         $user = self::userDeserialize($data);
-        return UserRepository::update($user, $id);
+        return UserRepository::update($user);
     }
     public static function delete($id)
     {
@@ -129,6 +128,7 @@ class UserService
         $user->fullName = $data['fullName'];
         $user->gender = $data['gender'];
         $user->password = $data['password'];
+        $user->id = $data['id'];
         $user->status = 1;
         return $user;
     }
