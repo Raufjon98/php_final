@@ -1,7 +1,7 @@
 <?
 function getConnection() 
 {
-    $var = 'Test github changes';
+    $var = 'working Directory';
     try {
         $connection = new PDO('mysql:host=localhost; dbname=cloud_storage', 'root', '6260834700109');
         if($connection){
